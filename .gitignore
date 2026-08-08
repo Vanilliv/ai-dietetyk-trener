@@ -1,0 +1,18 @@
+# środowisko wirtualne
+venv/
+env/
+
+# dane wrażliwe
+.env
+
+# artefakty budowania (PyInstaller)
+build/
+dist/
+
+# cache Pythona
+__pycache__/
+*.pyc
+
+# IDE
+.vscode/
+.idea/

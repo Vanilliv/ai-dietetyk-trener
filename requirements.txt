@@ -1,0 +1,7 @@
+customtkinter==6.0.0
+google-genai==2.10.0
+mysql-connector-python==9.7.0
+python-dotenv==1.2.2
+
+# tylko do budowania main.exe (main.spec), niepotrzebne do uruchomienia z kodu źródłowego
+pyinstaller==6.21.0
