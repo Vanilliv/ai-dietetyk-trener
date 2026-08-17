@@ -6,6 +6,7 @@ import ai_engine
 import database
 import config
 import walidacja
+import formatowanie
 import sys
 from tkinter import messagebox
 
@@ -138,6 +139,7 @@ class Aplikacja(ctk.CTk):
 
         self.pole_tekstowe = ctk.CTkTextbox(self.ramka_prawa, wrap="word", font=("Arial", 14), activate_scrollbars=True)
         self.pole_tekstowe.pack(fill="both", expand=True, padx=20, pady=20)
+        self._skonfiguruj_tagi(self.pole_tekstowe)
 
         # ekran startowy z wyborem poziomu zaawansowania
         self.ramka_wyboru_poziomu = ctk.CTkFrame(self, fg_color="transparent")
@@ -278,12 +280,28 @@ class Aplikacja(ctk.CTk):
             odpowiedz_ai = f"Wystąpił nieoczekiwany błąd: {e}"
 
         self.pole_tekstowe.delete("0.0", "end")
-        self.pole_tekstowe.insert("0.0", odpowiedz_ai)
+        self._wstaw_z_formatowaniem(self.pole_tekstowe, odpowiedz_ai)
         self.przycisk_generuj.configure(state="normal", text="Generuj Plan z AI")
 
     def pokaz_blad(self, wiadomosc):
         self.pole_tekstowe.delete("0.0", "end")
         self.pole_tekstowe.insert("0.0", wiadomosc)
+
+    def _skonfiguruj_tagi(self, textbox):
+        """Style dla nagłówków dni/posiłków i wpisów historii - pole tekstowe nie renderuje Markdown, więc wyróżnienie robimy sami przez tagi tkinter.
+
+        CTkTextbox.tag_config nie pozwala na opcję 'font' (niezgodne ze skalowaniem DPI),
+        więc nagłówki wyróżniamy kolorem, podkreśleniem i odstępem zamiast pogrubienia.
+        """
+        textbox.tag_config("naglowek", foreground="#3B8ED0", underline=True, spacing1=12, spacing3=4)
+        textbox.tag_config("wpis_naglowek", foreground="#A9A9A9", underline=True, spacing1=6, spacing3=4)
+
+    def _wstaw_z_formatowaniem(self, textbox, tekst):
+        """Wstawia tekst planu do pola tekstowego, pogrubiając linie z nagłówkami dni/posiłków."""
+        tekst = formatowanie.oczysc_markdown(tekst)
+        for linia in tekst.split("\n"):
+            tag = "naglowek" if formatowanie.czy_naglowek(linia) else ""
+            textbox.insert("end", linia + "\n", tag)
 
     def pokaz_historie(self):
         okno_historii = ctk.CTkToplevel(self)
@@ -295,6 +313,7 @@ class Aplikacja(ctk.CTk):
 
         pole_historii = ctk.CTkTextbox(okno_historii, wrap="word", font=("Arial", 13))
         pole_historii.pack(fill="both", expand=True, padx=20, pady=20)
+        self._skonfiguruj_tagi(pole_historii)
 
         try:
             plany = database.pobierz_plany()
@@ -309,8 +328,10 @@ class Aplikacja(ctk.CTk):
             for plan in plany:
                 id_planu, typ, tresc, data, imie = plan[0], plan[1], plan[2], plan[3], plan[4]
                 imie_wyswietlane = imie if imie else "Nieznany klient"
-                wpis = f"--- [DATA ZAPISU: {data}] {typ.upper()} dla: {imie_wyswietlane} (ID: {id_planu}) ---\n\n{tresc}\n\n{'='*70}\n\n"
-                pole_historii.insert("end", wpis)
+                naglowek_wpisu = f"--- [DATA ZAPISU: {data}] {typ.upper()} dla: {imie_wyswietlane} (ID: {id_planu}) ---\n\n"
+                pole_historii.insert("end", naglowek_wpisu, "wpis_naglowek")
+                self._wstaw_z_formatowaniem(pole_historii, tresc)
+                pole_historii.insert("end", f"\n{'='*70}\n\n")
 
 if __name__ == "__main__":
     app = Aplikacja()

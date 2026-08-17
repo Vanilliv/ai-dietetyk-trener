@@ -40,7 +40,11 @@ def zbuduj_prompt(typ, wiek, waga, wzrost, cel, uwagi, liczba_dni, priorytet_par
        - Dla "Zaawansowany": wysoka intensywność (RPE 8-10, w tym serie do upadku mięśniowego / RIR 0), zaawansowane techniki intensyfikacji (drop-sety, rest-pause, serie łączone), bardziej wymagające ćwiczenia i wyższa objętość.
     2. OBJĘTOŚĆ: Każdy dzień treningowy może zawierać maksymalnie od 5 do 7 ćwiczeń (optymalnie 6). Nie przekraczaj tej liczby pod żadnym pozorem! Kulturysta buduje mięśnie jakością serii, a nie ich ilością.
     3. INTENSYWNOŚĆ: Dla każdego ćwiczenia określ liczbę serii, powtórzeń oraz poziom RPE (skala intensywności 1-10) lub zapas powtórzeń (RIR) dostosowany do poziomu.
-    4. PRIORYTET: Jeśli wybrano priorytetową partię mięśniową ({priorytet_partia}), umieść ćwiczenia na nią na samym początku treningu, kiedy klient ma najwięcej siły.
+    4. PRIORYTET: Jeśli wybrano priorytetową partię mięśniową ({priorytet_partia}), zwiększ dla niej częstotliwość i łączną objętość w CAŁYM tygodniu - nie ogranicza się to do jednego dnia:
+       - Przy 4 i więcej dniach treningowych zaplanuj trening tej partii CO NAJMNIEJ 2 RAZY w tygodniu (wyższa częstotliwość daje lepsze efekty hipertroficzne niż jedna bardzo obszerna sesja).
+       - Przy 2-3 dniach treningowych i tak dodaj dla tej partii 1-2 ćwiczenia uzupełniające w innym dniu, w którym logicznie pasuje (np. przy priorytecie na klatkę - w dniu barków/tricepsa), zamiast całkowicie ją pomijać w pozostałych dniach.
+       - W dniu głównie poświęconym priorytetowej partii jej ćwiczenia umieść na samym początku treningu, kiedy klient ma najwięcej siły.
+       - Priorytetowa partia powinna mieć łącznie więcej serii w tygodniu niż pozostałe partie mięśniowe.
     
     Rygorystyczne zasady dla Planu Dietetycznego pod kątem poziomu zaawansowania ({poziom_zaawansowania}):
     1. BEZWZGLĘDNIE dostosuj złożoność dań, restrykcyjność oraz suplementację do wybranego poziomu:
@@ -55,6 +59,9 @@ def zbuduj_prompt(typ, wiek, waga, wzrost, cel, uwagi, liczba_dni, priorytet_par
     - FORMATOWANIE: Ćwiczenia w planie treningowym muszą być ZAWSZE PONUMEROWANE (1., 2., 3. itd.). Absolutnie nie używaj zwykłych kropek ani gwiazdek (*) do wylistowania ćwiczeń.
     - FORMATOWANIE: Między ćwiczeniami wstaw enter dla lepszej czytelności.
     - FORMATOWANIE: Posiłki w dietach również numerycznie (Posiłek 1, Posiłek 2).
+    - FORMATOWANIE: NIE używaj składni Markdown (żadnych **, __, #, ~~, tabel) - tekst trafia do zwykłego pola tekstowego, które takiego formatowania nie renderuje, więc pisz czystym tekstem.
+    - FORMATOWANIE: Każdy dzień treningowy zaczynaj w osobnej linii od nagłówka w formacie "DZIEŃ <numer>: <partia/rodzaj treningu>" (np. "DZIEŃ 1: Klatka piersiowa i triceps").
+    - FORMATOWANIE: Każdy posiłek zaczynaj w osobnej linii od nagłówka w formacie "POSIŁEK <numer>: <nazwa posiłku>".
     - Nie pisz długich wstępów, przejdź od razu do konkretów w kulturystycznym, profesjonalnym stylu.
     """
 
