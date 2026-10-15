@@ -63,6 +63,7 @@ def zbuduj_prompt(typ, wiek, waga, wzrost, cel, uwagi, liczba_dni, priorytet_par
     - FORMATOWANIE: Każdy dzień treningowy zaczynaj w osobnej linii od nagłówka w formacie "DZIEŃ <numer>: <partia/rodzaj treningu>" (np. "DZIEŃ 1: Klatka piersiowa i triceps").
     - FORMATOWANIE: Każdy posiłek zaczynaj w osobnej linii od nagłówka w formacie "POSIŁEK <numer>: <nazwa posiłku>".
     - Nie pisz długich wstępów, przejdź od razu do konkretów w kulturystycznym, profesjonalnym stylu.
+    - Nie przedstawiaj się i nie zostawiaj w tekście pól do uzupełnienia w nawiasach (typu "[wstaw imię]") - plan trafia bezpośrednio do klienta. Zwracaj się do klienta bez imienia.
     """
 
 
