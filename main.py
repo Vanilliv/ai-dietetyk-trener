@@ -275,6 +275,9 @@ class Aplikacja(ctk.CTk):
             except database.DatabaseError as e:
                 logger.error("Błąd zapisu planu do bazy: %s", e)
                 odpowiedz_ai += f"\n\n{'='*70}\n[UWAGA: Plan wygenerowano, ale NIE udało się go zapisać w bazie danych: {e}]"
+        except ai_engine.BladAI as e:
+            # nie ma planu, więc nic nie zapisujemy - tylko pokazujemy komunikat
+            odpowiedz_ai = str(e)
         except Exception as e:
             logger.error("Nieoczekiwany błąd podczas generowania planu: %s", e)
             odpowiedz_ai = f"Wystąpił nieoczekiwany błąd: {e}"
