@@ -109,31 +109,32 @@ class Aplikacja(ctk.CTk):
         self.wejscie_uwagi = ctk.CTkEntry(self.ramka_lewa, placeholder_text="Np. kontuzja kolana")
         self.wejscie_uwagi.pack(pady=(5, 10), padx=20, fill="x")
 
-        ctk.CTkLabel(self.ramka_lewa, text="Czego nie lubisz w diecie (Opcjonalnie):", font=("Arial", 12)).pack(pady=(15, 0), padx=20, anchor="w")
+        ctk.CTkLabel(self.ramka_lewa, text="Czego nie lubisz w diecie (Opcjonalnie):",
+                      font=("Arial", 12)).pack(pady=(15, 0), padx=20, anchor="w")
         self.wejscie_wykluczenia = ctk.CTkEntry(self.ramka_lewa, placeholder_text="Np. pomidory, cebula, brokuły, nabiał")
         self.wejscie_wykluczenia.pack(pady=(5, 10), padx=20, fill="x")
 
         ctk.CTkLabel(self.ramka_lewa, text="Cel główny:", font=("Arial", 12)).pack(pady=(15, 0), padx=20, anchor="w")
         cele = ["Budowa masy mięśniowej", "Redukcja tkanki tłuszczowej", "Utrzymanie wagi", "Poprawa kondycji"]
-        self.wybor_celu = ctk.CTkComboBox(self.ramka_lewa, values=cele)
+        self.wybor_celu = ctk.CTkComboBox(self.ramka_lewa, values=cele, state="readonly")
         self.wybor_celu.pack(pady=(5, 10), padx=20, fill="x")
         self.wybor_celu.set(cele[0])
 
         ctk.CTkLabel(self.ramka_lewa, text="Rodzaj planu:", font=("Arial", 12)).pack(pady=(15, 0), padx=20, anchor="w")
         typy_planow = ["Plan Treningowy", "Plan Dietetyczny"]
-        self.wybor_typu = ctk.CTkComboBox(self.ramka_lewa, values=typy_planow)
+        self.wybor_typu = ctk.CTkComboBox(self.ramka_lewa, values=typy_planow, state="readonly")
         self.wybor_typu.pack(pady=(5, 10), padx=20, fill="x")
         self.wybor_typu.set(typy_planow[0])
 
         ctk.CTkLabel(self.ramka_lewa, text="Liczba dni w tygodniu:", font=("Arial", 12)).pack(pady=(15, 0), padx=20, anchor="w")
         opcje_dni = ["2", "3", "4", "5", "6", "7"]
-        self.wybor_dni = ctk.CTkComboBox(self.ramka_lewa, values=opcje_dni)
+        self.wybor_dni = ctk.CTkComboBox(self.ramka_lewa, values=opcje_dni, state="readonly")
         self.wybor_dni.pack(pady=(5, 20), padx=20, fill="x")
         self.wybor_dni.set("3")
 
         ctk.CTkLabel(self.ramka_lewa, text="Priorytetowa partia (tylko trening):", font=("Arial", 12)).pack(pady=(15, 0), padx=20, anchor="w")
         partie = ["Brak priorytetu", "Klatka piersiowa", "Plecy", "Nogi", "Barki", "Ramiona (Biceps/Triceps)", "Brzuch"]
-        self.wybor_partii = ctk.CTkComboBox(self.ramka_lewa, values=partie)
+        self.wybor_partii = ctk.CTkComboBox(self.ramka_lewa, values=partie, state="readonly")
         self.wybor_partii.pack(pady=(5, 20), padx=20, fill="x")
         self.wybor_partii.set("Brak priorytetu")
 
@@ -207,7 +208,8 @@ class Aplikacja(ctk.CTk):
         self.pokaz_ekran_wyboru()
 
     def stworz_karte_poziomu(self, rodzic, tytul, opis, kolor, hover_kolor, poziom):
-        karta = ctk.CTkFrame(rodzic, width=280, height=420, corner_radius=15, border_width=2, border_color="#3A3A3A", fg_color="#1E1E1E")
+        karta = ctk.CTkFrame(rodzic, width=280, height=420, corner_radius=15, border_width=2,
+                              border_color="#3A3A3A", fg_color="#1E1E1E")
         karta.pack(side="left", padx=20, fill="both", expand=True)
         karta.pack_propagate(False)
 
@@ -241,7 +243,6 @@ class Aplikacja(ctk.CTk):
 
     def wybierz_poziom(self, poziom):
         self.poziom_zaawansowania = poziom
-        # Skrócona nazwa do wyświetlenia w etykiecie
         skrot = poziom
         if poziom == "Średnio zaawansowany":
             skrot = "Średnio zaaw."
@@ -302,8 +303,6 @@ class Aplikacja(ctk.CTk):
         self.pole_tekstowe.delete("0.0", "end")
         self.pole_tekstowe.insert("0.0", wiadomosc)
 
-    # Styl nagłówków planu i wpisów historii.
-    # CTkTextbox nie pozwala ustawić czcionki w tag_config, dlatego kolor i podkreślenie zamiast pogrubienia
     def _skonfiguruj_tagi(self, textbox):
         textbox.tag_config("naglowek", foreground="#3B8ED0", underline=True, spacing1=12, spacing3=4)
         textbox.tag_config("wpis_naglowek", foreground="#A9A9A9", underline=True, spacing1=6, spacing3=4)
