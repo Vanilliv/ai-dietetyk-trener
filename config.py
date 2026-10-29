@@ -1,4 +1,4 @@
-#wspolna konfiguracja - wczytywanie .env i dane polaczenia z baza/API
+# Wczytywanie pliku .env i ustawienia połączenia
 import os
 import sys
 from dotenv import load_dotenv

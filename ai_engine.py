@@ -1,4 +1,4 @@
-#łączenie z modelem Gemini AI
+# Komunikacja z modelem Gemini
 import logging
 from google import genai
 from google.genai import errors as genai_errors
@@ -12,11 +12,12 @@ if not config.GEMINI_API_KEY:
 client = genai.Client(api_key=config.GEMINI_API_KEY)
 
 
+# Treść wyjątku to komunikat wyświetlany użytkownikowi
 class BladAI(Exception):
-    """Gemini nie zwróciło planu. Treść wyjątku to komunikat do pokazania użytkownikowi."""
+    pass
 
+# Osobno od generuj_plan(), żeby dało się testować prompt bez łączenia z API
 def zbuduj_prompt(typ, wiek, waga, wzrost, cel, uwagi, liczba_dni, priorytet_partia="Brak priorytetu", poziom_zaawansowania="Średnio zaawansowany", wykluczenia=""):
-    """Składa treść zapytania do Gemini na podstawie danych klienta. Czysta funkcja - bez wywołań sieciowych, więc łatwo ją przetestować."""
     tekst_uwag = uwagi if uwagi.strip() else "Brak specjalnych uwag i przeciwwskazań."
     tekst_wykluczen = wykluczenia if wykluczenia.strip() else "Brak specyficznych wykluczeń lub nielubianych składników."
 
@@ -72,11 +73,6 @@ def zbuduj_prompt(typ, wiek, waga, wzrost, cel, uwagi, liczba_dni, priorytet_par
 
 
 def generuj_plan(typ, wiek, waga, wzrost, cel, uwagi, liczba_dni, priorytet_partia="Brak priorytetu", poziom_zaawansowania="Średnio zaawansowany", wykluczenia=""):
-    """Wysyła zbudowany prompt do Gemini i zwraca wygenerowany plan.
-
-    Przy błędzie rzuca BladAI zamiast zwracać komunikat jako tekst - wcześniej
-    komunikat o błędzie trafiał do bazy jak zwykły plan.
-    """
     prompt = zbuduj_prompt(typ, wiek, waga, wzrost, cel, uwagi, liczba_dni, priorytet_partia, poziom_zaawansowania, wykluczenia)
 
     logger.info("Generuję %s (%s dni) dla celu: %s", typ, liczba_dni, cel)
@@ -93,7 +89,7 @@ def generuj_plan(typ, wiek, waga, wzrost, cel, uwagi, liczba_dni, priorytet_part
         logger.error("Nieoczekiwany błąd podczas generowania planu: %s", e)
         raise BladAI("Niestety, wystąpił nieoczekiwany problem z połączeniem z AI (sprawdź połączenie internetowe).") from e
 
-    # response.text bywa None, np. gdy model zablokuje odpowiedź filtrem bezpieczeństwa
+    # Pusta odpowiedź, np. zablokowana przez filtr bezpieczeństwa
     if not response.text:
         logger.error("Gemini zwróciło pustą odpowiedź")
         raise BladAI("Model AI nie zwrócił żadnego planu. Spróbuj ponownie lub zmień uwagi w formularzu.")

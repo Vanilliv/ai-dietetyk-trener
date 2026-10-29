@@ -16,3 +16,6 @@ __pycache__/
 # IDE
 .vscode/
 .idea/
+
+# pliki tymczasowe od promotora - do usuniecia, nie commitowac
+Chwilowy/

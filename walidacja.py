@@ -1,4 +1,4 @@
-#walidacja danych wprowadzanych w formularzu
+# Walidacja danych z formularza
 
 WIEK_MAX = 120
 WAGA_MAX = 400
@@ -13,7 +13,6 @@ def waliduj_imie(imie_str):
 
 
 def waliduj_dane_klienta(wiek_str, waga_str, wzrost_str):
-    """Sprawdza i konwertuje dane z formularza. Przy błędzie rzuca ValueError z komunikatem do pokazania użytkownikowi."""
     wiek_str = wiek_str.strip()
     waga_str = waga_str.strip()
     wzrost_str = wzrost_str.strip()

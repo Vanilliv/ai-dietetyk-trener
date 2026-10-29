@@ -1,25 +1,42 @@
-#okno graficzne oraz komunikacja między wątkami
+# Interfejs graficzny aplikacji
 import customtkinter as ctk
 import threading
 import logging
-import ai_engine
-import database
+import tkinter as tk
 import config
-import walidacja
-import formatowanie
 import sys
 from tkinter import messagebox
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 logger = logging.getLogger(__name__)
 
+
+def zakoncz_z_bledem(tytul, tresc):
+    # Ukryte okno, bo główne jeszcze nie istnieje
+    root = tk.Tk()
+    root.withdraw()
+    messagebox.showerror(tytul, tresc)
+    sys.exit(1)
+
+
+# Sprawdzenie klucza przed importem ai_engine, który bez klucza kończy się błędem
+if not config.GEMINI_API_KEY:
+    zakoncz_z_bledem(
+        "Brak klucza API",
+        "Nie znaleziono klucza GEMINI_API_KEY.\n\n"
+        "Upewnij się, że plik .env leży obok main.exe (albo w katalogu projektu) "
+        "i zawiera linię GEMINI_API_KEY=twój_klucz."
+    )
+
+import ai_engine
+import database
+import walidacja
+import formatowanie
+
 try:
     database.stworz_tabele()
 except database.DatabaseError as e:
-    import tkinter as tk
-    root = tk.Tk()
-    root.withdraw()
-    messagebox.showerror(
+    zakoncz_z_bledem(
         "Błąd połączenia z bazą danych",
         f"Nie można połączyć się z bazą danych MySQL.\n\n"
         f"Szczegóły błędu:\n{e}\n\n"
@@ -28,14 +45,9 @@ except database.DatabaseError as e:
         f"2. Baza danych o nazwie '{config.DB_NAME}' została utworzona w phpMyAdmin.\n"
         f"3. Dane połączenia w pliku .env są poprawne."
     )
-    sys.exit(1)
 except Exception as e:
-    # coś innego niż problem z połączeniem - nie sugerujemy fałszywie, że to wina MySQL
-    import tkinter as tk
-    root = tk.Tk()
-    root.withdraw()
-    messagebox.showerror("Nieoczekiwany błąd", f"Aplikacja nie mogła się uruchomić:\n{e}")
-    sys.exit(1)
+    # Inny błąd niż brak połączenia z bazą
+    zakoncz_z_bledem("Nieoczekiwany błąd", f"Aplikacja nie mogła się uruchomić:\n{e}")
 
 # Ustawienia wyglądu GUI
 ctk.set_appearance_mode("Dark")
@@ -50,7 +62,7 @@ class Aplikacja(ctk.CTk):
 
         self.poziom_zaawansowania = "Średnio zaawansowany"
 
-        # formularz i wyniki - ukryte na starcie, pokazywane dopiero po wyborze poziomu (patrz pokaz_ekran_wyboru)
+        # Formularz i wyniki, widoczne dopiero po wyborze poziomu
         self.ramka_glowna = ctk.CTkFrame(self, fg_color="transparent")
 
         # Lewy panel
@@ -141,7 +153,7 @@ class Aplikacja(ctk.CTk):
         self.pole_tekstowe.pack(fill="both", expand=True, padx=20, pady=20)
         self._skonfiguruj_tagi(self.pole_tekstowe)
 
-        # ekran startowy z wyborem poziomu zaawansowania
+        # Ekran startowy z wyborem poziomu zaawansowania
         self.ramka_wyboru_poziomu = ctk.CTkFrame(self, fg_color="transparent")
         
         self.kontener_wyboru = ctk.CTkFrame(self.ramka_wyboru_poziomu, fg_color="transparent")
@@ -276,7 +288,7 @@ class Aplikacja(ctk.CTk):
                 logger.error("Błąd zapisu planu do bazy: %s", e)
                 odpowiedz_ai += f"\n\n{'='*70}\n[UWAGA: Plan wygenerowano, ale NIE udało się go zapisać w bazie danych: {e}]"
         except ai_engine.BladAI as e:
-            # nie ma planu, więc nic nie zapisujemy - tylko pokazujemy komunikat
+            # Brak planu, więc bez zapisu do bazy
             odpowiedz_ai = str(e)
         except Exception as e:
             logger.error("Nieoczekiwany błąd podczas generowania planu: %s", e)
@@ -290,17 +302,13 @@ class Aplikacja(ctk.CTk):
         self.pole_tekstowe.delete("0.0", "end")
         self.pole_tekstowe.insert("0.0", wiadomosc)
 
+    # Styl nagłówków planu i wpisów historii.
+    # CTkTextbox nie pozwala ustawić czcionki w tag_config, dlatego kolor i podkreślenie zamiast pogrubienia
     def _skonfiguruj_tagi(self, textbox):
-        """Style dla nagłówków dni/posiłków i wpisów historii - pole tekstowe nie renderuje Markdown, więc wyróżnienie robimy sami przez tagi tkinter.
-
-        CTkTextbox.tag_config nie pozwala na opcję 'font' (niezgodne ze skalowaniem DPI),
-        więc nagłówki wyróżniamy kolorem, podkreśleniem i odstępem zamiast pogrubienia.
-        """
         textbox.tag_config("naglowek", foreground="#3B8ED0", underline=True, spacing1=12, spacing3=4)
         textbox.tag_config("wpis_naglowek", foreground="#A9A9A9", underline=True, spacing1=6, spacing3=4)
 
     def _wstaw_z_formatowaniem(self, textbox, tekst):
-        """Wstawia tekst planu do pola tekstowego, pogrubiając linie z nagłówkami dni/posiłków."""
         tekst = formatowanie.oczysc_markdown(tekst)
         for linia in tekst.split("\n"):
             tag = "naglowek" if formatowanie.czy_naglowek(linia) else ""

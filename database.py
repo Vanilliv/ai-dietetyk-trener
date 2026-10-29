@@ -1,4 +1,4 @@
-#połączenie i tworzenie tabel
+# Obsługa bazy danych MySQL
 import logging
 import mysql.connector
 import mysql.connector.plugins.caching_sha2_password
@@ -7,11 +7,10 @@ import config
 
 logger = logging.getLogger(__name__)
 
-# alias, żeby wyższe warstwy (main.py) łapały błędy bazy danych bez wiedzy, że to akurat MySQL
+# Wspólna nazwa błędów bazy, używana w main.py
 DatabaseError = mysql.connector.Error
 
 def polacz():
-    """Tworzy połączenie z zewnętrzną bazą danych MySQL/MariaDB."""
     return mysql.connector.connect(
         host=config.DB_HOST,
         user=config.DB_USER,
@@ -22,7 +21,6 @@ def polacz():
     )
 
 def stworz_tabele():
-    """Tworzy strukturę tabel w bazie MySQL, jeśli nie istnieją."""
     conn = polacz()
     cursor = conn.cursor()
 
@@ -53,13 +51,9 @@ def stworz_tabele():
     conn.close()
     logger.info("Tabele bazy danych MySQL są gotowe.")
 
+# Aplikacja nie ma logowania, więc klient rozpoznawany jest po imieniu.
+# TODO: dwie osoby o tym samym imieniu dzielą jeden rekord, do zmiany przy kontach użytkowników
 def znajdz_lub_stworz_uzytkownika(imie, wiek, waga, wzrost, cel):
-    """Zwraca id użytkownika o podanym imieniu (tworzy go, jeśli jeszcze nie istnieje).
-
-    Aplikacja nie ma logowania, więc imię pełni funkcję prostego identyfikatora klienta -
-    dwie różne osoby o tym samym imieniu współdzielą tu jeden rekord. Wystarczające na
-    potrzeby tego projektu, ale prawdziwy system wymagałby kont użytkowników.
-    """
     conn = polacz()
     cursor = conn.cursor()
 
@@ -82,7 +76,6 @@ def znajdz_lub_stworz_uzytkownika(imie, wiek, waga, wzrost, cel):
     return id_uzytkownika
 
 def zapisz_plan(typ_planu, tresc_planu, id_uzytkownika=None):
-    """Zapisuje plan w bazie danych MySQL, opcjonalnie powiązany z użytkownikiem."""
     conn = polacz()
     cursor = conn.cursor()
 
@@ -95,7 +88,6 @@ def zapisz_plan(typ_planu, tresc_planu, id_uzytkownika=None):
     logger.info("Zapisano nowy %s w bazie MySQL.", typ_planu)
 
 def pobierz_plany():
-    """Pobiera wszystkie plany z bazy MySQL wraz z imieniem klienta, sortując od najnowszego."""
     conn = polacz()
     cursor = conn.cursor()
 

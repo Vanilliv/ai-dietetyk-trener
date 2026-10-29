@@ -41,7 +41,7 @@ class TestBudowaPromptu(unittest.TestCase):
         self.assertIn("Zaawansowany", prompt)
 
 
-# Klient Gemini podmieniony na atrapę, żeby testy nie łączyły się z API
+# Atrapa klienta Gemini zamiast prawdziwego API
 class TestGenerowaniePlanu(unittest.TestCase):
 
     def test_zwraca_tekst_odpowiedzi(self):
