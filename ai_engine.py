@@ -60,7 +60,7 @@ def zbuduj_prompt(typ, wiek, waga, wzrost, cel, uwagi, liczba_dni, priorytet_par
     Zasady formatowania i bezpieczeństwa:
     - BEZWZGLĘDNIE dostosuj plan do uwag specjalnych oraz wykluczeń żywieniowych! 
     - Jeśli klient ma kontuzję, wyklucz ćwiczenia ją obciążające i zaproponuj bezpieczne zamienniki.
-    - Jeśli klient ma alergię lub podał nielubiane składniki ({wykluczenia}), pod żadnym pozorem nie używaj tych składników w jadłospisie. Zastąp je innymi wartościowymi i smacznymi produktami.
+    - Jeśli klient ma alergię lub podał nielubiane składniki ({tekst_wykluczen}), pod żadnym pozorem nie używaj tych składników w jadłospisie. Zastąp je innymi wartościowymi i smacznymi produktami.
     - FORMATOWANIE: Ćwiczenia w planie treningowym muszą być ZAWSZE PONUMEROWANE (1., 2., 3. itd.). Absolutnie nie używaj zwykłych kropek ani gwiazdek (*) do wylistowania ćwiczeń.
     - FORMATOWANIE: Między ćwiczeniami wstaw enter dla lepszej czytelności.
     - FORMATOWANIE: Posiłki w dietach również numerycznie (Posiłek 1, Posiłek 2).
