@@ -295,8 +295,12 @@ class Aplikacja(ctk.CTk):
             logger.error("Nieoczekiwany błąd podczas generowania planu: %s", e)
             odpowiedz_ai = f"Wystąpił nieoczekiwany błąd: {e}"
 
+        # Całe odświeżenie widoku jako jedno zadanie w wątku głównym
+        self.after(0, self.pokaz_wynik, odpowiedz_ai)
+
+    def pokaz_wynik(self, tekst):
         self.pole_tekstowe.delete("0.0", "end")
-        self._wstaw_z_formatowaniem(self.pole_tekstowe, odpowiedz_ai)
+        self._wstaw_z_formatowaniem(self.pole_tekstowe, tekst)
         self.przycisk_generuj.configure(state="normal", text="Generuj Plan z AI")
 
     def pokaz_blad(self, wiadomosc):
