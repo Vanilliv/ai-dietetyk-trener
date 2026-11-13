@@ -5,7 +5,7 @@ NAGLOWEK_DNIA = re.compile(r'^\s*DZIE[NŃ]\s+\d+', re.IGNORECASE)
 NAGLOWEK_POSILKU = re.compile(r'^\s*POSI[LŁ]EK\s+\d+', re.IGNORECASE)
 
 
-# Pole tekstowe nie obsługuje Markdown, więc znaki typu ** i # są usuwane
+# Pole tekstowe nie obsługuje Markdown, znaki typu ** i # są usuwane
 def oczysc_markdown(tekst):
     tekst = re.sub(r'\*\*(.+?)\*\*', r'\1', tekst)
     tekst = re.sub(r'__(.+?)__', r'\1', tekst)

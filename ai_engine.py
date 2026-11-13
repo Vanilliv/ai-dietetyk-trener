@@ -79,7 +79,7 @@ def generuj_plan(typ, wiek, waga, wzrost, cel, uwagi, liczba_dni, priorytet_part
 
     try:
         response = client.models.generate_content(
-            model='gemini-2.5-flash',
+            model='gemini-3.5-flash',
             contents=prompt,
         )
     except genai_errors.APIError as e:
